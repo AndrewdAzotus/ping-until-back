@@ -1,0 +1,27 @@
+#!/bin/bash
+if [ "$1" == "" ]; then
+  echo "Specify a Pi to wait for"
+  exit
+fi
+Pi=$1
+rc=0
+ctr1=1
+until [ $rc -ne 0 ]; do
+  echo $ctr1"] waiting for "$Pi" to go down"
+  ((ctr1++))
+  ping -c1 $Pi > /dev/null
+  rc=$?
+  sleep 1
+done
+echo $Pi" is down."
+
+ctr2=0
+until [ $rc -eq 0 ];do
+  echo $Pi" went down after "$ctr1", waiting for restart "$ctr2
+  ((ctr2++))
+  ping -c1 $Pi > /dev/null
+  rc=$?
+  sleep 1
+done
+
+echo $Pi "has restarted"
